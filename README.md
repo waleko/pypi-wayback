@@ -28,7 +28,7 @@ docker run -p 8080:8080 ghcr.io/waleko/pypi-wayback
 Alternatively, you can run it directly using Python:
 ```bash
 pip install pypi-wayback
-python -m pypi-wayback --port 8080
+python -m pypi_wayback --port 8080
 ```
 
 ### Accessing a Package's Historical Page
