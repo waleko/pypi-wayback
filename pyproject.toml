@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pypi-wayback"
-version = "0.1.8"
+version = "0.2.0"
 description = "PyPI wayback machine"
 authors = ["Alexander Kovrigin <alexander.kovrigin@jetbrains.com>"]
 readme = "README.md"
@@ -13,18 +13,68 @@ python = "^3.10"
 beautifulsoup4 = "^4.12.3"
 requests = "^2.32.3"
 flask = "^3.0.3"
-
-[tool.poetry.dev-dependencies]
 gunicorn = "^23.0.0"
-pytest = "^8.3.3"
-
 
 [tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
 ruff = "^0.6.9"
 black = "^24.8.0"
 flake8 = "^7.1.1"
 isort = "^5.13.2"
 
+mypy = "^1.11.2"
+types-requests = "^2.32.0.20240914"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | _build
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+
+[tool.flake8]
+max-line-length = 120
+extend-ignore = ["E203", "E501"]
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    "venv",
+]
+
+[tool.ruff]
+line-length = 120
+select = ["F", "E", "W", "B", "I", "A"]
+ignore = ["E203", "E501"]
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    "venv",
+]
+
+[tool.mypy]
+python_version = "3.10"
+check_untyped_defs = true
+ignore_missing_imports = true
+strict = true
+exclude = '(^test)'
+
+[tool.poetry.scripts]
+lint = "lint:main"

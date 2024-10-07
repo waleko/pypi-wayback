@@ -23,7 +23,7 @@ ENV PATH="/root/.local/bin:$PATH"
 COPY pyproject.toml poetry.lock* /app/
 
 # Install dependencies defined in pyproject.toml using Poetry
-RUN poetry install --with dev --no-interaction --no-ansi
+RUN poetry install --only main --no-interaction --no-ansi
 
 # Copy the rest of the application code
 COPY . /app
