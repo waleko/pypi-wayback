@@ -29,4 +29,4 @@ RUN poetry install --only main --no-interaction --no-ansi
 COPY . /app
 
 # Define the command to run the application using gunicorn
-CMD poetry run gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 pypi_wayback:app
+CMD poetry run gunicorn --bind :$PORT pypi_wayback:app

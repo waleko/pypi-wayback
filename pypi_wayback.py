@@ -1,5 +1,7 @@
 from argparse import ArgumentParser
 from datetime import datetime
+import time
+from os import environ
 
 import requests
 from bs4 import BeautifulSoup
@@ -33,12 +35,15 @@ def filter_html(package_name: str, allowed_versions: list[str]) -> str:
     soup = BeautifulSoup(response.text, "html.parser")
 
     result_html = f"<h1>Links for {package_name}</h1>\n"
+    allowed_versions_set = set(allowed_versions)
+    
+    filtered_anchors = []
     for anchor in soup.find_all("a"):
         filename = anchor.text
-        if filename in allowed_versions:
-            result_html += str(anchor) + "<br />\n"
+        if filename in allowed_versions_set:
+            filtered_anchors.append(str(anchor) + "<br />\n")
 
-    soup.body.replace_with(BeautifulSoup(result_html, "html.parser"))
+    soup.body.replace_with(BeautifulSoup(result_html + "".join(filtered_anchors), "html.parser"))
     res: str = soup.prettify(encoding=None)
     return res
 
@@ -50,11 +55,19 @@ def proxy_pypi_with_cutoff(package_name: str, date_string: str) -> Response:
     except ValueError:
         return Response("Invalid date format. Use YYYY-MM-DD.", status=400)
 
+    start_time = time.time()
     allowed_files = get_allowed_files(package_name, cutoff_date)
     if not allowed_files:
         return Response("No valid versions found before the cutoff date.", status=404)
 
+    mid_time = time.time()
+
     filtered_html = filter_html(package_name, allowed_files)
+
+    end_time = time.time()
+
+    print(f"Time to get allowed files: {mid_time - start_time:.3f} sec")
+    print(f"Time to filter HTML: {end_time - mid_time:.3f} sec")
     return Response(filtered_html, mimetype="text/html")
 
 
