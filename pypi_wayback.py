@@ -1,7 +1,6 @@
+import time
 from argparse import ArgumentParser
 from datetime import datetime
-import time
-from os import environ
 
 import requests
 from bs4 import BeautifulSoup
@@ -36,7 +35,7 @@ def filter_html(package_name: str, allowed_versions: list[str]) -> str:
 
     result_html = f"<h1>Links for {package_name}</h1>\n"
     allowed_versions_set = set(allowed_versions)
-    
+
     filtered_anchors = []
     for anchor in soup.find_all("a"):
         filename = anchor.text
